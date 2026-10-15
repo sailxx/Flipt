@@ -1,0 +1,72 @@
+{
+  "ru": {
+    "alt": "Flipt — flip-часы и таймер фокуса для Windows на чёрном OLED-фоне",
+    "line1": "Flip-часы и таймер фокуса",
+    "line2": "на чистом чёрном экране",
+    "cta": "Скачать для Windows",
+    "chips": ["OLED-чёрный", "Без установки", "33 КБ", "Без сети", "Открытый код"],
+    "featuresTitle": "ВОЗМОЖНОСТИ",
+    "featuresHead": "Только время и фокус — *ничего лишнего*",
+    "featuresAlt": "Возможности Flipt",
+    "features": [
+      ["Flip-часы", "Крупные плитки с анимацией переворота, как у механических часов."],
+      ["Таймер фокуса", "25 минут по умолчанию, стрелки меняют на 5 минут, звук в конце."],
+      ["OLED-чёрный", "Чистый чёрный фон и тёмные плитки: экран не светится зря."],
+      ["Полный экран", "F11 или двойной клик. Курсор прячется, экран не гаснет."],
+      ["Минимализм", "Кнопки появляются при движении мыши и сами исчезают."],
+      ["Лёгкий", "Один exe без установки, без сети и без зависимостей."]
+    ],
+    "numbersTitle": "В ЦИФРАХ",
+    "numbersHead": "*Лёгкий*, как системные часы",
+    "numbersAlt": "Flipt в цифрах",
+    "numbers": [["1", "exe", "без установки"], ["33", "КБ", "весь размер программы"], ["0", "", "зависимостей и сети"], ["25", "мин", "таймер по умолчанию"]],
+    "keysTitle": "КЛАВИШИ",
+    "keysHead": "Всё управляется *с клавиатуры*",
+    "keysAlt": "Клавиши Flipt",
+    "keys": [
+      [["F11"], "Полный экран (или двойной клик)"],
+      [["M"], "Часы или таймер"],
+      [["Space"], "Старт и пауза таймера"],
+      [["↑", "↓"], "Таймер ±5 минут"],
+      [["R"], "Сбросить таймер"],
+      [["H"], "12 или 24 часа"],
+      [["T"], "Поверх всех окон"],
+      [["Q"], "Закрыть"]
+    ]
+  },
+  "en": {
+    "alt": "Flipt — a flip clock and focus timer for Windows on a pure black OLED screen",
+    "line1": "A flip clock and focus timer",
+    "line2": "on a pure black screen",
+    "cta": "Download for Windows",
+    "chips": ["OLED black", "No install", "33 KB", "Offline", "Open source"],
+    "featuresTitle": "FEATURES",
+    "featuresHead": "Just time and focus — *nothing else*",
+    "featuresAlt": "Flipt features",
+    "features": [
+      ["Flip clock", "Big tiles with a flip animation, like a mechanical clock."],
+      ["Focus timer", "25 minutes by default, arrows change it by 5, a sound at the end."],
+      ["OLED black", "Pure black background and dark tiles: no wasted light."],
+      ["Full screen", "F11 or double-click. The cursor hides, the screen stays on."],
+      ["Minimal", "Buttons appear when you move the mouse and fade away."],
+      ["Tiny", "A single exe: no installer, no network, no dependencies."]
+    ],
+    "numbersTitle": "BY THE NUMBERS",
+    "numbersHead": "*Light* as the system clock",
+    "numbersAlt": "Flipt by the numbers",
+    "numbers": [["1", "exe", "no installer"], ["33", "KB", "the whole app"], ["0", "", "dependencies or network"], ["25", "min", "default timer"]],
+    "keysTitle": "KEYS",
+    "keysHead": "Everything *from the keyboard*",
+    "keysAlt": "Flipt keys",
+    "keys": [
+      [["F11"], "Full screen (or double-click)"],
+      [["M"], "Clock or timer"],
+      [["Space"], "Start and pause the timer"],
+      [["↑", "↓"], "Timer ±5 minutes"],
+      [["R"], "Reset the timer"],
+      [["H"], "12 or 24 hours"],
+      [["T"], "Always on top"],
+      [["Q"], "Quit"]
+    ]
+  }
+}

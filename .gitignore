@@ -1,0 +1,7 @@
+# Build output (releases are built by GitHub Actions)
+*.exe
+*.pdb
+
+# README generator
+tools/readme/.font/
+tools/readme/node_modules/

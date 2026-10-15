@@ -1,0 +1,36 @@
+﻿name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write       # create the release
+  id-token: write       # sign build provenance
+  attestations: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build
+        shell: cmd
+        run: build.cmd
+      - name: SHA-256
+        shell: pwsh
+        run: |
+          $h = (Get-FileHash Flipt.exe -Algorithm SHA256).Hash.ToLower()
+          "$h  Flipt.exe" | Out-File -Encoding ascii -NoNewline Flipt.exe.sha256
+          Get-Content Flipt.exe.sha256
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: Flipt.exe
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$env:TAG" Flipt.exe Flipt.exe.sha256 --title "Flipt $env:TAG" --generate-notes --repo "$env:GITHUB_REPOSITORY"
