@@ -80,7 +80,7 @@ class Tile
         using (var path = Round(r, r.Height * 0.045f))
         using (var br = new SolidBrush(Color.FromArgb(22, 22, 25)))
             g.FillPath(br, path);
-        using (var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+        using (var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center, FormatFlags = StringFormatFlags.NoWrap })
         using (var tb = new SolidBrush(Color.FromArgb(250, 250, 252)))
             g.DrawString(text, f, tb, new RectangleF(r.X, r.Y - r.Height * 0.02f, r.Width, r.Height), sf);
         if (shade > 0)
@@ -102,7 +102,7 @@ class MainForm : Form
     Stopwatch clock = Stopwatch.StartNew();
     Stopwatch tick = new Stopwatch();
     Timer timer = new Timer();
-    bool use24 = false, timerMode = false, running = false, full = false;
+    bool use24 = true, timerMode = false, running = false, full = false;
     double focusLen = 25 * 60, remaining = 25 * 60;
     long hintUntil, lastMove;
     string label = "";
@@ -140,8 +140,18 @@ class MainForm : Form
         timer.Tick += OnTick;
         timer.Start();
         hintUntil = 5000;
-        MouseDown += delegate(object s, MouseEventArgs e) { if (e.Button == MouseButtons.Left) { int i = HitButton(e.Location); if (i >= 0) Press(i); } };
-        MouseDoubleClick += delegate(object s, MouseEventArgs e) { if (HitButton(e.Location) < 0) ToggleFull(); };
+        MouseDown += delegate(object s, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) return;
+            if (sliderOpen && BtnAlpha() > 0 && Rectangle.Inflate(SliderRect(), 12, 12).Contains(e.Location)) { dragging = true; SetSlider(e.Location); Invalidate(); return; }
+            int i = HitButton(e.Location); if (i >= 0) Press(i);
+        };
+        MouseUp += delegate { dragging = false; };
+        MouseDoubleClick += delegate(object s, MouseEventArgs e)
+        {
+            if (HitButton(e.Location) < 0 && !(sliderOpen && Rectangle.Inflate(SliderRect(), 12, 12).Contains(e.Location))) ToggleFull();
+        };
+        MouseMove += delegate(object s, MouseEventArgs e) { if (dragging) { SetSlider(e.Location); Invalidate(); } };
         MouseMove += delegate { lastMove = clock.ElapsedMilliseconds; hintUntil = lastMove + 3000; ShowCursor(); };
         KeyPreview = true;
         KeyDown += OnKey;
@@ -206,7 +216,26 @@ class MainForm : Form
     }
 
     // right-side icons: 0 fullscreen, 1 clock/timer, 2 play/pause (timer only); 12/24h and on-top stay on H/T
-    int[] Ids() { return timerMode ? new[] { 0, 1, 2 } : new[] { 0, 1 }; }
+    int[] Ids() { return timerMode ? new[] { 0, 1, 2, 3, 5 } : new[] { 0, 1, 3, 5 }; }
+
+    float scale = 1f;
+    bool sliderOpen, dragging;
+
+    // vertical slider track, left of the button column
+    Rectangle SliderRect()
+    {
+        var b = Buttons();
+        int sz = b[0].Width, H = ClientSize.Height;
+        int h = Math.Max(120, H * 2 / 5);
+        return new Rectangle(b[0].X - sz - sz / 2, (H - h) / 2, sz, h);
+    }
+
+    void SetSlider(Point p)
+    {
+        var r = SliderRect();
+        float t = 1f - Math.Max(0f, Math.Min(1f, (p.Y - r.Y) / (float)r.Height));
+        scale = 0.5f + t * 1.3f;
+    }
 
     Rectangle[] Buttons()
     {
@@ -245,6 +274,7 @@ class MainForm : Form
             case 2: ToggleRun(); break;
             case 3: use24 = !use24; break;
             case 4: TopMost = !TopMost; break;
+            case 5: sliderOpen = !sliderOpen; break;
         }
         UpdateTiles();
         Invalidate();
@@ -263,7 +293,19 @@ class MainForm : Form
             bool on = (i == 1 && timerMode) || (i == 2 && running);
             bool hot = b[k].Contains(mp);
             int c = hot ? 235 : on ? 170 : 95;
-            DrawIcon(g, i, b[k], Color.FromArgb(a, c, c, c), on);
+            DrawIcon(g, i, b[k], Color.FromArgb(a, c, c, c), on || (i == 5 && sliderOpen));
+        }
+        if (sliderOpen)
+        {
+            var r = SliderRect();
+            float cx = r.X + r.Width / 2f, t = (scale - 0.5f) / 1.3f;
+            float ky = r.Bottom - t * r.Height, kr = r.Width * 0.22f;
+            using (var pen = new Pen(Color.FromArgb(a, 70, 70, 70), Math.Max(3f, r.Width * 0.1f)) { StartCap = LineCap.Round, EndCap = LineCap.Round })
+                g.DrawLine(pen, cx, r.Y, cx, r.Bottom);
+            using (var pen = new Pen(Color.FromArgb(a, 235, 235, 235), Math.Max(3f, r.Width * 0.1f)) { StartCap = LineCap.Round, EndCap = LineCap.Round })
+                g.DrawLine(pen, cx, ky, cx, r.Bottom);
+            using (var br = new SolidBrush(Color.FromArgb(a, 250, 250, 252)))
+                g.FillEllipse(br, cx - kr, ky - kr, kr * 2, kr * 2);
         }
     }
 
@@ -308,6 +350,11 @@ class MainForm : Form
                     using (var f = new Font("Segoe UI", r.Width * 0.30f, FontStyle.Bold, GraphicsUnit.Pixel))
                     using (var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                         g.DrawString(use24 ? "24" : "12", f, br, new RectangleF(r.X, r.Y, r.Width, r.Height), sf);
+                    break;
+                case 5:
+                    using (var f = new Font("Segoe UI", r.Width * 0.34f, FontStyle.Bold, GraphicsUnit.Pixel))
+                    using (var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                        g.DrawString("Aa", f, br, new RectangleF(r.X, r.Y, r.Width, r.Height), sf);
                     break;
                 case 4:
                     g.DrawRectangle(pen, cx - u * 1.4f, cy - u * 1.2f, u * 2.8f, u * 2.4f);
@@ -379,29 +426,30 @@ class MainForm : Form
         if (W < 10 || H < 10) return;
         g.Clear(Color.Black);
 
-        float th = Math.Min(H * 0.52f, W * 0.21f);
-        float tw = th * 1.12f;
-        float gap = th * 0.07f;
-        float x0 = (W - (tw * 2 + gap)) / 2f;
-        float y0 = (H - th) / 2f;
-        var r1 = new RectangleF(x0, y0, tw, th);
-        var r2 = new RectangleF(x0 + tw + gap, y0, tw, th);
-
-        if (Math.Abs(fontFor - th) > 0.5f || tileFont == null)
+        string text = left.Cur + ":" + right.Cur;
+        string refText = left.Cur.Length >= 2 ? "88:88" : "8:88";
+        float fs;
+        using (var rf = new Font("Segoe UI", 100f, FontStyle.Bold, GraphicsUnit.Pixel))
+        using (var sfm = new StringFormat(StringFormat.GenericTypographic))
+        {
+            float rw = g.MeasureString(refText, rf, 100000, sfm).Width;
+            fs = Math.Min(Math.Min(100f * W * 0.54f / rw, H * 0.45f) * scale, Math.Min(100f * W * 0.88f / rw, H * 0.85f));
+        }
+        if (Math.Abs(fontFor - fs) > 0.5f || tileFont == null)
         {
             if (tileFont != null) tileFont.Dispose();
             if (smallFont != null) smallFont.Dispose();
-            tileFont = new Font("Segoe UI", th * 0.52f, FontStyle.Bold, GraphicsUnit.Pixel);
-            smallFont = new Font("Segoe UI", Math.Max(9f, th * 0.06f), FontStyle.Regular, GraphicsUnit.Pixel);
-            fontFor = th;
+            tileFont = new Font("Segoe UI", fs, FontStyle.Bold, GraphicsUnit.Pixel);
+            smallFont = new Font("Segoe UI", Math.Max(9f, fs * 0.1f), FontStyle.Regular, GraphicsUnit.Pixel);
+            fontFor = fs;
         }
-        long now = clock.ElapsedMilliseconds;
-        left.Paint(g, r1, tileFont, now);
-        right.Paint(g, r2, tileFont, now);
+        using (var sf = new StringFormat(StringFormat.GenericTypographic) { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+        using (var tb = new SolidBrush(Color.FromArgb(250, 250, 252)))
+            g.DrawString(text, tileFont, tb, new RectangleF(0, -fs * 0.04f, W, H), sf);
 
-        if (label != "")
+        if (timerMode && label != "")
             using (var b = new SolidBrush(Color.FromArgb(110, 110, 116)))
-                g.DrawString(label, smallFont, b, x0 + th * 0.06f, y0 + th * 0.05f);
+                g.DrawString(label, smallFont, b, W * 0.04f, H * 0.04f);
 
         DrawButtons(g);
     }
@@ -420,6 +468,7 @@ class MainForm : Form
         {
             var f = new MainForm();
             f.Show();
+            if (Environment.GetEnvironmentVariable("FLIPT_SIZE") == "full") f.ClientSize = new Size(2000, 960);
             Application.DoEvents();
             System.Threading.Thread.Sleep(900);
             Application.DoEvents();
