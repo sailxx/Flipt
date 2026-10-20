@@ -427,13 +427,17 @@ class MainForm : Form
         g.Clear(Color.Black);
 
         string text = left.Cur + ":" + right.Cur;
-        string refText = left.Cur.Length >= 2 ? "88:88" : "8:88";
+        bool stack = H > W * 1.15f;
+        string refText = stack ? "88" : left.Cur.Length >= 2 ? "88:88" : "8:88";
         float fs;
         using (var rf = new Font("Segoe UI", 100f, FontStyle.Bold, GraphicsUnit.Pixel))
         using (var sfm = new StringFormat(StringFormat.GenericTypographic))
         {
             float rw = g.MeasureString(refText, rf, 100000, sfm).Width;
-            fs = Math.Min(Math.Min(100f * W * 0.54f / rw, H * 0.45f) * scale, Math.Min(100f * W * 0.88f / rw, H * 0.85f));
+            if (stack)
+                fs = Math.Min(Math.Min(100f * W * 0.68f / rw, H * 0.34f) * scale, Math.Min(100f * W * 0.80f / rw, H * 0.44f));
+            else
+                fs = Math.Min(Math.Min(100f * W * 0.54f / rw, H * 0.45f) * scale, Math.Min(100f * W * 0.88f / rw, H * 0.85f));
         }
         if (Math.Abs(fontFor - fs) > 0.5f || tileFont == null)
         {
@@ -445,7 +449,15 @@ class MainForm : Form
         }
         using (var sf = new StringFormat(StringFormat.GenericTypographic) { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
         using (var tb = new SolidBrush(Color.FromArgb(250, 250, 252)))
-            g.DrawString(text, tileFont, tb, new RectangleF(0, -fs * 0.04f, W, H), sf);
+        {
+            if (stack)
+            {
+                float lh = fs * 0.98f;
+                g.DrawString(left.Cur, tileFont, tb, new RectangleF(0, H / 2f - lh * 1.5f - fs * 0.04f, W, lh * 2), sf);
+                g.DrawString(right.Cur, tileFont, tb, new RectangleF(0, H / 2f - lh * 0.5f - fs * 0.04f, W, lh * 2), sf);
+            }
+            else g.DrawString(text, tileFont, tb, new RectangleF(0, -fs * 0.04f, W, H), sf);
+        }
 
         if (timerMode && label != "")
             using (var b = new SolidBrush(Color.FromArgb(110, 110, 116)))
@@ -469,6 +481,7 @@ class MainForm : Form
             var f = new MainForm();
             f.Show();
             if (Environment.GetEnvironmentVariable("FLIPT_SIZE") == "full") f.ClientSize = new Size(2000, 960);
+            if (Environment.GetEnvironmentVariable("FLIPT_SIZE") == "tall") f.ClientSize = new Size(640, 1340);
             Application.DoEvents();
             System.Threading.Thread.Sleep(900);
             Application.DoEvents();
