@@ -9,8 +9,8 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Flipt")]
 [assembly: System.Reflection.AssemblyProduct("Flipt")]
-[assembly: System.Reflection.AssemblyVersion("1.2.0.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.2.0.0")]
+[assembly: System.Reflection.AssemblyVersion("1.2.1.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.2.1.0")]
 
 class Tile
 {
@@ -458,9 +458,11 @@ class MainForm : Form
             smallFont = new Font("Segoe UI", Math.Max(9f, fs * 0.1f), FontStyle.Regular, GraphicsUnit.Pixel);
             fontFor = fs;
         }
+        // GenericTypographic has LineLimit: a line taller than the rect (big digits) is not drawn at all
         using (var sf = new StringFormat(StringFormat.GenericTypographic) { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
         using (var tb = new SolidBrush(Color.FromArgb(250, 250, 252)))
         {
+            sf.FormatFlags = (sf.FormatFlags & ~StringFormatFlags.LineLimit) | StringFormatFlags.NoWrap | StringFormatFlags.NoClip;
             if (stack)
             {
                 float lh = fs * 0.98f;
