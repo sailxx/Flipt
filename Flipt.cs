@@ -9,8 +9,8 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Flipt")]
 [assembly: System.Reflection.AssemblyProduct("Flipt")]
-[assembly: System.Reflection.AssemblyVersion("1.2.1.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.2.1.0")]
+[assembly: System.Reflection.AssemblyVersion("1.2.2.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.2.2.0")]
 
 class Tile
 {
@@ -406,7 +406,7 @@ class MainForm : Form
         {
             var d = DateTime.Now;
             int h = d.Hour;
-            if (use24) { left.Set(h.ToString("00"), now); label = ""; }
+            if (use24) { left.Set(h.ToString(), now); label = ""; }
             else
             {
                 int h12 = h % 12; if (h12 == 0) h12 = 12;
