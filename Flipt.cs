@@ -9,8 +9,8 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Flipt")]
 [assembly: System.Reflection.AssemblyProduct("Flipt")]
-[assembly: System.Reflection.AssemblyVersion("1.1.0.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.1.0.0")]
+[assembly: System.Reflection.AssemblyVersion("1.1.1.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.1.1.0")]
 
 class Tile
 {
@@ -240,7 +240,7 @@ class MainForm : Form
     Rectangle[] Buttons()
     {
         int W = ClientSize.Width, H = ClientSize.Height;
-        int sz = (int)Math.Max(30, Math.Min(46, Math.Min(W, H) * 0.065));
+        int sz = (int)Math.Max(22, Math.Min(30, Math.Min(W, H) * 0.045));
         int gap = sz / 2, n = Ids().Length;
         int total = n * sz + (n - 1) * gap;
         int x = W - sz - Math.Max(16, sz * 2 / 3), y = (H - total) / 2;
