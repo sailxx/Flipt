@@ -9,8 +9,8 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Flipt")]
 [assembly: System.Reflection.AssemblyProduct("Flipt")]
-[assembly: System.Reflection.AssemblyVersion("1.1.2.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.1.2.0")]
+[assembly: System.Reflection.AssemblyVersion("1.2.0.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.2.0.0")]
 
 class Tile
 {
@@ -152,7 +152,7 @@ class MainForm : Form
             if (HitButton(e.Location) < 0 && !(sliderOpen && Rectangle.Inflate(SliderRect(), 12, 12).Contains(e.Location))) ToggleFull();
         };
         MouseMove += delegate(object s, MouseEventArgs e) { if (dragging) { SetSlider(e.Location); Invalidate(); } };
-        MouseMove += delegate { lastMove = clock.ElapsedMilliseconds; hintUntil = lastMove + 3000; ShowCursor(); };
+        MouseMove += delegate (object o, MouseEventArgs e) { lastMove = clock.ElapsedMilliseconds; if (HoverZone().Contains(e.Location)) hintUntil = lastMove + 600; ShowCursor(); };
         KeyPreview = true;
         KeyDown += OnKey;
         FormClosed += delegate { SetThreadExecutionState(ES_CONTINUOUS); };
@@ -258,8 +258,19 @@ class MainForm : Form
         return -1;
     }
 
+    Rectangle HoverZone()
+    {
+        var b = Buttons();
+        var z = Rectangle.Union(b[0], b[b.Length - 1]);
+        z = Rectangle.Inflate(z, b[0].Width, b[0].Width);
+        z.Width = ClientSize.Width - z.X;
+        if (sliderOpen) z = Rectangle.Union(z, Rectangle.Inflate(SliderRect(), 12, 12));
+        return z;
+    }
+
     int BtnAlpha()
     {
+        if (HoverZone().Contains(PointToClient(Cursor.Position))) hintUntil = clock.ElapsedMilliseconds + 600;
         long left_ = hintUntil - clock.ElapsedMilliseconds;
         if (left_ <= 0) return 0;
         return (int)Math.Min(255, left_ * 255 / 600);
