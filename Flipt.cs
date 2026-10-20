@@ -435,7 +435,7 @@ class MainForm : Form
         {
             float rw = g.MeasureString(refText, rf, 100000, sfm).Width;
             if (stack)
-                fs = Math.Min(Math.Min(100f * W * 0.68f / rw, H * 0.34f) * scale, Math.Min(100f * W * 0.80f / rw, H * 0.44f));
+                fs = Math.Min(Math.Min(100f * W * 0.60f / rw, H * 0.28f) * scale, Math.Min(100f * W * 0.92f / rw, H * 0.46f));
             else
                 fs = Math.Min(Math.Min(100f * W * 0.54f / rw, H * 0.45f) * scale, Math.Min(100f * W * 0.88f / rw, H * 0.85f));
         }
