@@ -71,6 +71,15 @@ Flipt\build.cmd
 | `app.manifest` | Запуск без прав администратора |
 | `tools/readme/` | Генератор картинок README (`npm install && node build.mjs`) |
 
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+
+- **What is signed:** only the official `Flipt.exe` that GitHub Actions builds from this repository when a `v*` tag is pushed (see `.github/workflows/release.yml`). Builds from forks, branches or local machines are never signed.
+- **Team roles:** committer, reviewer and approver of every signing request — [@sailxx](https://github.com/sailxx). Two-factor authentication is required for the GitHub and SignPath accounts.
+- **Privacy:** this program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.
+- **Verification:** besides the signature, every release carries a SHA-256 file and a GitHub build provenance attestation (`gh attestation verify Flipt.exe --repo sailxx/Flipt`).
+
 ## Лицензия
 
 [MIT](LICENSE) © sailxx
