@@ -1,5 +1,9 @@
 <div align="center">
 
+[Русский](README.ru.md) · **English**
+
+<br>
+
 <img src="assets/readme/hero-en.svg" width="100%" alt="Flipt — a flip clock and focus timer for Windows on a pure black OLED screen">
 
 <a href="https://github.com/sailxx/Flipt/releases/latest/download/Flipt.exe"><img src="assets/readme/cta-en.svg" height="52" alt="Download for Windows"></a>
