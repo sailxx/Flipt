@@ -9,8 +9,8 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Flipt")]
 [assembly: System.Reflection.AssemblyProduct("Flipt")]
-[assembly: System.Reflection.AssemblyVersion("1.2.2.0")]
-[assembly: System.Reflection.AssemblyFileVersion("1.2.2.0")]
+[assembly: System.Reflection.AssemblyVersion("1.2.3.0")]
+[assembly: System.Reflection.AssemblyFileVersion("1.2.3.0")]
 
 class Tile
 {
@@ -110,6 +110,8 @@ class MainForm : Form
     float fontFor = 0;
     Rectangle restore;
     bool cursorHidden;
+    string lastShown = "";
+    int lastAlpha = -1;
 
     [DllImport("dwmapi.dll")] static extern int DwmSetWindowAttribute(IntPtr h, int a, ref int v, int s);
     protected override void OnHandleCreated(EventArgs e)
@@ -132,7 +134,7 @@ class MainForm : Form
         MinimumSize = new Size((int)(420 * sc), (int)(260 * sc));
         BackColor = Color.Black;
         DoubleBuffered = true;
-        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         try { Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath); } catch { }
 
         SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY | ES_SYSTEM);
@@ -422,7 +424,12 @@ class MainForm : Form
         long now = clock.ElapsedMilliseconds;
         UpdateTiles();
         if (full && !cursorHidden && now - lastMove > 2500) { Cursor.Hide(); cursorHidden = true; }
-        Invalidate();
+        // Перерисовываем только при изменении: текста или прозрачности кнопок. В покое таймер тикает редко
+        string shown = left.Cur + ":" + right.Cur + label;
+        int alpha = BtnAlpha();
+        if (shown != lastShown || alpha != lastAlpha) { lastShown = shown; lastAlpha = alpha; Invalidate(); }
+        int want = alpha > 0 ? 16 : 200;
+        if (timer.Interval != want) timer.Interval = want;
     }
 
     protected override void OnPaint(PaintEventArgs e)
