@@ -1,50 +1,46 @@
 <div align="center">
 
-**Русский** · [English](README.en.md)
+<img src="assets/readme/hero-en.svg" width="100%" alt="Flipt — a flip clock and focus timer for Windows on a pure black OLED screen">
 
-<br>
-
-<img src="assets/readme/hero-ru.svg" width="100%" alt="Flipt — flip-часы и таймер фокуса для Windows на чёрном OLED-фоне">
-
-<a href="https://github.com/sailxx/Flipt/releases/latest/download/Flipt.exe"><img src="assets/readme/cta-ru.svg" height="52" alt="Скачать для Windows"></a>
+<a href="https://github.com/sailxx/Flipt/releases/latest/download/Flipt.exe"><img src="assets/readme/cta-en.svg" height="52" alt="Download for Windows"></a>
 
 </div>
 
 <br>
 
-Хочется видеть время крупно и не отвлекаться — но системные часы крошечные, а сайты с часами шумят рекламой. **Flipt** — большие flip-часы на чистом чёрном экране и таймер фокуса на 25 минут. Без установки, без сети, без лишних кнопок.
+You want to see the time big and stay focused — but the system clock is tiny and clock websites are full of ads. **Flipt** is a large flip clock on a pure black screen plus a 25-minute focus timer. No installer, no network, no clutter.
 
 <br>
 
-<img src="assets/readme/features-ru.svg" width="100%" alt="Возможности: flip-часы, таймер фокуса, OLED-чёрный, полный экран, минимализм, лёгкость">
+<img src="assets/readme/features-en.svg" width="100%" alt="Features: flip clock, focus timer, OLED black, full screen, minimal, tiny">
 
 <br>
 
-<img src="assets/readme/numbers-ru.svg" width="100%" alt="1 exe, 33 КБ, 0 зависимостей, таймер 25 минут">
+<img src="assets/readme/numbers-en.svg" width="100%" alt="1 exe, 33 KB, 0 dependencies, 25-minute timer">
 
 <br>
 
-<img src="assets/readme/keys-ru.svg" width="100%" alt="Клавиши: F11 полный экран, M часы или таймер, пробел старт и пауза, стрелки ±5 минут, R сброс, H 12/24 часа, T поверх окон, Q выход">
+<img src="assets/readme/keys-en.svg" width="100%" alt="Keys: F11 full screen, M clock or timer, Space start and pause, arrows ±5 minutes, R reset, H 12/24 hours, T always on top, Q quit">
 
-## Установка
+## Install
 
-1. Скачайте [`Flipt.exe`](https://github.com/sailxx/Flipt/releases/latest/download/Flipt.exe) и положите в постоянную папку, например `%LOCALAPPDATA%\Flipt`.
-2. Запустите. Ярлык можно закрепить в «Пуске» или на панели задач.
+1. Download [`Flipt.exe`](https://github.com/sailxx/Flipt/releases/latest/download/Flipt.exe) and put it in a permanent folder, e.g. `%LOCALAPPDATA%\Flipt`.
+2. Run it. Pin it to Start or the taskbar if you like.
 
-Нужна Windows 10 или 11: .NET Framework 4.8 уже встроен в систему.
+Requires Windows 10 or 11: .NET Framework 4.8 is built in.
 
-> Windows SmartScreen может предупредить о неизвестном издателе: файл не подписан платным сертификатом. Нажмите «Подробнее → Выполнить в любом случае» или соберите программу сами.
+> Windows SmartScreen may warn about an unknown publisher because the file is not signed with a paid certificate. Click "More info → Run anyway", or build it yourself.
 
 <details>
-<summary><b>Как проверить, что exe собран из этого кода</b></summary>
+<summary><b>How to verify the exe was built from this code</b></summary>
 
-Каждый релиз собирает GitHub Actions прямо из исходников, а GitHub подписывает происхождение файла (build provenance):
+Every release is built by GitHub Actions from source, and GitHub signs the build provenance:
 
 ```bash
 gh attestation verify Flipt.exe --repo sailxx/Flipt
 ```
 
-Контрольная сумма SHA-256 лежит рядом с exe в каждом релизе (`Flipt.exe.sha256`):
+The SHA-256 checksum ships next to the exe in every release (`Flipt.exe.sha256`):
 
 ```powershell
 Get-FileHash .\Flipt.exe -Algorithm SHA256
@@ -52,7 +48,7 @@ Get-FileHash .\Flipt.exe -Algorithm SHA256
 
 </details>
 
-## Сборка из исходников
+## Build from source
 
 ```bash
 git clone https://github.com/sailxx/Flipt.git
@@ -62,14 +58,14 @@ git clone https://github.com/sailxx/Flipt.git
 Flipt\build.cmd
 ```
 
-Компилятор C# уже есть в Windows — ничего устанавливать не нужно.
+The C# compiler ships with Windows — nothing to install.
 
-| Файл | Что внутри |
+| File | What's inside |
 |---|---|
-| `Flipt.cs` | Окно, плитки с анимацией, таймер, кнопки |
-| `flipt.ico` | Значок: сетка точек 3×3 с буквой F |
-| `app.manifest` | Запуск без прав администратора |
-| `tools/readme/` | Генератор картинок README (`npm install && node build.mjs`) |
+| `Flipt.cs` | Window, flip tiles, timer, buttons |
+| `flipt.ico` | Icon: a 3×3 dot grid forming an F |
+| `app.manifest` | Runs without admin rights |
+| `tools/readme/` | README image generator (`npm install && node build.mjs`) |
 
 ## Code signing policy
 
@@ -80,6 +76,6 @@ Free code signing provided by [SignPath.io](https://signpath.io), certificate by
 - **Privacy:** this program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.
 - **Verification:** besides the signature, every release carries a SHA-256 file and a GitHub build provenance attestation (`gh attestation verify Flipt.exe --repo sailxx/Flipt`).
 
-## Лицензия
+## License
 
 [MIT](LICENSE) © sailxx
